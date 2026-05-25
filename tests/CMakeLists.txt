@@ -5,7 +5,7 @@ add_executable(test_time_scales
 )
 
 target_link_libraries(test_time_scales PRIVATE
-    time_scales
+    times
     Catch2::Catch2WithMain
 )
 

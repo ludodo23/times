@@ -10,7 +10,7 @@ from conan.tools.build import check_min_cppstd
 class TimesConan(ConanFile):
     name = "times"
     settings = "os", "arch", "compiler", "build_type"
-    exports_sources = "include/*", "tests/*"
+    exports_sources = "include/*", "tests/*", "CMakeLists.txt", "VERSION"
     no_copy_source = True
     package_type = "header-library"
 
@@ -22,7 +22,7 @@ class TimesConan(ConanFile):
         self.test_requires("catch2/3.4.0")
 
     def validate(self):
-        check_min_cppstd(self, 17)
+        check_min_cppstd(self, 20)
 
     def layout(self):
         cmake_layout(self)

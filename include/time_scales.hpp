@@ -113,6 +113,7 @@
 #include <string>
 #include <string_view>
 #include <variant>
+#include <numbers>
 
 namespace ts {
 
@@ -193,7 +194,10 @@ struct JulianDate {
 
     JulianDate operator+(double days) const noexcept { return { jd1, jd2 + days }; }
     JulianDate operator-(double days) const noexcept { return { jd1, jd2 - days }; }
-    double     operator-(const JulianDate& o) const noexcept { return total() - o.total(); }
+    JulianDate operator+(const JulianDate& o) const noexcept { return { jd1 + o.jd1, jd2 + o.jd2 }; }
+    JulianDate operator-(const JulianDate& o) const noexcept { return { jd1 - o.jd1, jd2 - o.jd2 }; }
+
+    operator double() const noexcept { return total(); }
 
     /// Normalise : jd1 = entier, jd2 ∈ [0, 1)
     JulianDate normalized() const noexcept {
@@ -319,6 +323,10 @@ inline JulianDate calendar_to_jd(const CalendarDate& c) {
     return { ip, fp };
 }
 
+inline JulianDate calendar_to_jd(int year, int month, int day,
+                            int hour = 0, int minute = 0, double second = 0.0) {
+    return calendar_to_jd(CalendarDate(year, month, day, hour, minute, second));
+}
 /**
  * JD → calendrier grégorien.
  * Algorithme : Meeus, ch. 7.
@@ -526,14 +534,14 @@ inline double tdb_minus_tt(const JulianDate& jd_tt,
 
     /* — Arguments des planètes et de la Lune — */
     double FA[8];
-    FA[0] =  std::fmod(  3.176146697 + 1021.3285546211 * T, 2*M_PI); // L_Me
-    FA[1] =  std::fmod(  1.753470314 +  628.3075849991 * T, 2*M_PI); // L_Ve (≈L_Earth here used for Earth anomaly g)
-    FA[2] =  std::fmod(  6.203480913 +  334.0612426700 * T, 2*M_PI); // L_E  (Mars)
-    FA[3] =  std::fmod(  0.599546497 +   52.9690965095 * T, 2*M_PI); // L_Ma (Jupiter)
-    FA[4] =  std::fmod(  0.874016757 +   21.3299095438 * T, 2*M_PI); // L_J  (Saturn)
-    FA[5] =  std::fmod(  5.481293872 +    7.4781598567 * T, 2*M_PI); // L_S  (Uranus)
-    FA[6] =  std::fmod(  5.311886287 +    3.8133035638 * T, 2*M_PI); // L_U  (Neptune)
-    FA[7] =  std::fmod(  0.024381750 +    0.3371716902 * T, 2*M_PI); // p_A  (precession)
+    FA[0] =  std::fmod(  3.176146697 + 1021.3285546211 * T, 2*std::numbers::pi); // L_Me
+    FA[1] =  std::fmod(  1.753470314 +  628.3075849991 * T, 2*std::numbers::pi); // L_Ve (≈L_Earth here used for Earth anomaly g)
+    FA[2] =  std::fmod(  6.203480913 +  334.0612426700 * T, 2*std::numbers::pi); // L_E  (Mars)
+    FA[3] =  std::fmod(  0.599546497 +   52.9690965095 * T, 2*std::numbers::pi); // L_Ma (Jupiter)
+    FA[4] =  std::fmod(  0.874016757 +   21.3299095438 * T, 2*std::numbers::pi); // L_J  (Saturn)
+    FA[5] =  std::fmod(  5.481293872 +    7.4781598567 * T, 2*std::numbers::pi); // L_S  (Uranus)
+    FA[6] =  std::fmod(  5.311886287 +    3.8133035638 * T, 2*std::numbers::pi); // L_U  (Neptune)
+    FA[7] =  std::fmod(  0.024381750 +    0.3371716902 * T, 2*std::numbers::pi); // p_A  (precession)
 
     // Anomalie moyenne de la Terre (élément central pour TDB)
     const double g  = 6.239996 + 628.301955 * T;
@@ -618,7 +626,7 @@ inline double tdb_minus_tt(const JulianDate& jd_tt,
     // Vitesse de l'observateur projetée sur la direction barycentrique
     // (première harmonique de l'orbite terrestre)
     const double WF = 7.292115e-5; // rotation terrestre (rad/s)
-    const double VE = 2.0 * M_PI * u * std::cos(FA[1]) / SEC_PER_DAY; // approximation
+    const double VE = 2.0 * std::numbers::pi * u * std::cos(FA[1]) / SEC_PER_DAY; // approximation
     const double OBS_CORR = -0.0000969 * SELONG * std::cos(FA[1])
                             +0.0000969 * CELONG * std::sin(FA[1])
                             -0.0000035 * SELONG * std::sin(FA[1]);
