@@ -874,7 +874,13 @@ public:
     ModifiedJulianDate mjd_utc() const noexcept { return jd_to_mjd(jd_utc_); }
     ModifiedJulianDate mjd_tt()  const noexcept { return jd_to_mjd(tt()); }
     ModifiedJulianDate mjd_tai() const noexcept { return jd_to_mjd(tai()); }
+ModifiedJulianDate mjd_tdb() const noexcept {
+    return jd_to_mjd(tdb());
+}
 
+ModifiedJulianDate mjd_tcb() const noexcept {
+    return jd_to_mjd(tcb());
+}
     CalendarDate calendar_utc() const { return jd_to_calendar(jd_utc_); }
     CalendarDate calendar_tt()  const { return jd_to_calendar(tt()); }
     CalendarDate calendar_ut1() const { return jd_to_calendar(ut1()); }
