@@ -680,7 +680,7 @@ inline JulianDate ut1_to_utc(const JulianDate& jd_ut1, double dut1_s) noexcept {
 // ───────────────────────────────────────────────────────────────
 struct AllScales {
     JulianDate jd_utc, jd_ut1, jd_tai, jd_tt, jd_tcg, jd_tcb, jd_tdb;
-    ModifiedJulianDate mjd_utc, mjd_tt;
+    ModifiedJulianDate mjd_utc, mjd_tai, mjd_tt, mjd_tcb, mjd_tdb;
 };
 
 inline AllScales compute_all(const JulianDate& jd_utc,
@@ -698,8 +698,11 @@ inline AllScales compute_all(const JulianDate& jd_utc,
     r.jd_tcg = tt_to_tcg(r.jd_tt);
     r.jd_tcb = tt_to_tcb(r.jd_tt);
     r.jd_tdb = tt_to_tdb(r.jd_tt, ut, elong, u, v);
-    r.mjd_utc = jd_to_mjd(r.jd_utc);
-    r.mjd_tt  = jd_to_mjd(r.jd_tt);
+r.mjd_utc = jd_to_mjd(r.jd_utc);
+r.mjd_tai = jd_to_mjd(r.jd_tai);
+r.mjd_tt  = jd_to_mjd(r.jd_tt);
+r.mjd_tcb = jd_to_mjd(r.jd_tcb);
+r.mjd_tdb = jd_to_mjd(r.jd_tdb);
     return r;
 }
 
