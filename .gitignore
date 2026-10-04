@@ -69,3 +69,4 @@ Testing/
 .cache/
 
 .CMakeUserPresets.json
+.vsconan/
